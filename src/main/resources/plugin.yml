@@ -1,0 +1,15 @@
+ name: Aether Donate
+ version: 0.0.1
+ description: Donation plugin for Sleeping rock servers
+ author: clone11
+ website: http://noneatm
+
+ main: com.sleepingrock.aether.ADonate
+ depend: [Vault]
+
+ commands:
+    donate:
+       description: donate functions
+       usage: /donate <buy, info>
+       permission: ADonate.donate
+       permission-message: You don't have <permission>
