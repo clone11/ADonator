@@ -106,4 +106,43 @@ public class DonatorDatabase {
         }
         return 0;
     }
+    //
+    public boolean redeemToken(String token, String playerName) {
+        if (checkToken(token)) {
+            ADonate.log.info(playerName + " Is redeeming token " + token);
+            try {
+                PreparedStatement prep = sqlConnection.prepareStatement("DELETE FROM tokens WHERE token=?");
+                prep.setString(1, token);
+                prep.execute();
+                ADonate.log.info("Deleted token " + token);
+                prep = sqlConnection.prepareStatement("INSERT INTO redeemedtoken (token, minecraftname, date) VALUES (?, ?, ?)");
+                prep.setString(1, token);
+                prep.setString(2, playerName);
+                prep.setDate(3, new Date(System.currentTimeMillis()));
+                prep.execute();
+                ADonate.log.info(playerName + " has redeemed " + token);
+                setPlayerPoints(playerName, getPlayerPoints(playerName) + 1000);
+                return true;
+            } catch (Exception e) {
+
+            }
+        } else {
+            ADonate.log.info(playerName + " attempted to redeem non existing token " + token);
+        }
+        return false;
+    }
+    public boolean checkToken(String token) {
+        try {
+            PreparedStatement prep = sqlConnection.prepareStatement("SELECT token FROM tokens WHERE token=?");
+            prep.setString(1, token);
+            ResultSet rs = prep.executeQuery();
+            while (rs.next()) {
+                return true;
+            }
+        } catch (Exception e) {
+
+        }
+        return false;
+    }
+
 }

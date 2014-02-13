@@ -53,9 +53,25 @@ public class DonateCommandExecutor implements CommandExecutor {
                         commandSender.sendMessage("VIP bonus -----");
                     }
                     return true;
+                } else if (param[0].equalsIgnoreCase("redeem")) {
+                    if (param.length == 2) {
+                        commandSender.sendMessage("Attempting to redeem token...");
+                        if (plugin.dbConnection.redeemToken(param[1], commandSender.getName())) {
+                            commandSender.sendMessage("Token successfully redeemed token " + param[1]);
+                        } else {
+                            commandSender.sendMessage("Invalid token " + param[1]);
+                        }
+                        return true;
+                    } else {
+                        commandSender.sendMessage("Not enough arguments use /donate redeem <token>");
+                        return true;
+                    }
+                } else if (param[0].equalsIgnoreCase("points")) {
+                    commandSender.sendMessage("You have " + plugin.dbConnection.getPlayerPoints(commandSender.getName()) + " points");
+                    return true;
                 }
             }
-            commandSender.sendMessage("Not enough arguments use: /donate (buy, info)");
+            commandSender.sendMessage("Not enough arguments use: /donate (buy, info, redeem, points)");
             return true;
         }
         return false;
